@@ -1,0 +1,71 @@
+from openpyxl import load_workbook
+from utils import return_class_data, return_name_percent, return_data, prepare_moss
+from utils import above_threshold, rename_all,unzip_files, get_students, remove_all_but_arhives
+import os
+import sys
+
+# Path to files sent to MOSS
+# remove_text = 'C:/Users/leona/OneDrive/Desktop/Newfolder/'
+# Load moss data from file
+# sheet = load_workbook(filename = 'sheet.xlsx')
+# sheet = sheet.active
+# data = return_class_data(sheet, ['A', 'B', 'C'], remove_text)
+
+# needRename = input("Redenumire fisiere = 1. Raspuns = ")
+# if needRename == "1":
+#     folder = input("Nume folder:")
+#     rename_all(folder)
+
+# needUnzip = input("Extractare fisiere = 1. Raspuns = ")
+# if needUnzip == "1":
+#     folder = input("Nume folder:")
+#     unzip_files(folder)
+
+# FIRST PARAMETER = function:
+#       0 -> extragere studenti grupa x
+#       1 -> redenumire fisiere folder x
+#       2 -> dezarhivare fisiere din folder x
+
+
+argvs = sys.argv
+
+if argvs[1] == '0':
+    source_folder = argvs[2]
+    student_list = argvs[4]
+    destination_folder = argvs[3]
+    get_students(source_folder, student_list, destination_folder)
+
+if argvs[1] == '1':
+    folder = argvs[2]
+    rename_all(folder)
+
+if argvs[1] == '2':
+    folder = argvs[2]
+    unzip_files(folder)
+    
+if argvs[1] == '3':
+    remove_text = 'C:/Desktop/SDA/312AB/'
+    # Load moss data from file
+    sheet = load_workbook(filename = 'sheet.xlsx')
+    sheet = sheet.active
+    data  = return_class_data(sheet, ['A', 'B', 'C'], remove_text)
+    naughty_set = above_threshold('note.xlsx', data, 15, 3, make_red = False)
+    file = open('312AB_Copiat.txt', mode = 'w', encoding = 'UTF-8')
+    for x in naughty_set:
+        file.write(str(x) + '\n')
+        
+if argvs[1] == '4':
+    submission_folder = argvs[2]
+    remove_all_but_arhives(submission_folder)
+ 
+if argvs[1] == '5':
+    submission_folder = argvs[2]
+    sub_folder_name = argvs[3]
+    prepare_moss(submission_folder, sub_folder_name)
+# Set the grade collum
+# gradeCol = 11
+# Make all naughty ones red in the .xlsx
+# num = above_threshold('Catalog.xlsx', data, 0, gradeCol)
+# print(num)
+
+
