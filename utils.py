@@ -262,8 +262,16 @@ def get_students(source_folder, student_list, destination_folder):
     for student in students_submissions:
         
         if student in our_students:
+            
             source_path_student = os.path.join(source_path, student)
-            shutil.move(source_path_student, destination_path)
+            destination_path_student = os.path.join(destination_path, student)
+            try:
+                os.mkdir(destination_path_student)
+            except:
+                shutil.rmtree(destination_path_student)
+                os.mkdir(destination_path_student)
+                
+            copy_all(source_path_student, destination_path_student)
 
 
 # Check if a file has one of the given extensions
@@ -296,20 +304,26 @@ def remove_all_but_arhives(submission_folder):
                 else:
                     os.remove(path)
                 
-# Move one file with one of the given endings
 def move(src_path, file, moss_dest, endings = []):
     file_path = os.path.join(src_path, file)
     if len(endings):
         if file_ending_in(file, endings):
-            shutil.copy(file_path, moss_dest)
+            shutil.move(file_path, moss_dest)
     else:
-        shutil.copy(file_path, moss_dest)
-
-# Move the files with a given ending while keeping the directory structure
+        try:
+            shutil.move(file_path, moss_dest)
+        except:
+            pass
+            
+# move the files with a given ending while keeping the directory structure
 def move_all(src, dest, endings = []):
     
     os.chdir(src)
     files = os.listdir(src)
+    try:
+        os.mkdir(dest)
+    except:
+        pass
     for file in files:
         if os.path.isdir(file):
             try:
@@ -319,30 +333,68 @@ def move_all(src, dest, endings = []):
                 os.mkdir(os.path.join(dest, file))
             
             move_all(os.path.join(src, file), os.path.join(dest, file), endings)
+           
             os.chdir(src)
         else:
             move(src, file, dest, endings)
 
-# Move all files with one of the given endings to dest folder
-def move_all_TO(src, dest, endings = []):
+# copy one file with one of the given endings
+def copy(src_path, file, moss_dest, endings = []):
+    file_path = os.path.join(src_path, file)
+    if len(endings):
+        if file_ending_in(file, endings):
+            shutil.copy(file_path, moss_dest)
+    else:
+        try:
+            shutil.copy(file_path, moss_dest)
+        except:
+            pass
+            
+# copy the files with a given ending while keeping the directory structure
+def copy_all(src, dest, endings = []):
+    
+    os.chdir(src)
+    files = os.listdir(src)
+    try:
+        os.mkdir(dest)
+    except:
+        pass
+    for file in files:
+        if os.path.isdir(file):
+            try:
+                os.mkdir(os.path.join(dest, file))
+            except:
+                shutil.rmtree(os.path.join(dest, file))
+                os.mkdir(os.path.join(dest, file))
+            
+            copy_all(os.path.join(src, file), os.path.join(dest, file), endings)
+            os.chdir(src)
+        else:
+            copy(src, file, dest, endings)
+
+# copy all files with one of the given endings to dest folder
+def copy_all_TO(src, dest, endings = []):
     
     os.chdir(src)
     files = os.listdir(src)
     for file in files:
         if os.path.isdir(file):            
-            move_all_TO(os.path.join(src, file), dest, endings)
+            copy_all_TO(os.path.join(src, file), dest, endings)
             os.chdir(src)
         else:
-            move(src, file, dest, endings)
+            copy(src, file, dest, endings)
     
 
-# Prepare data for moss by moving all the with one of the given
+# Prepare data for moss by moving all the files with one of the given
 # endings to one folder for each student  
-def prepare_moss(submission_folder, sub_folder_name = 'src', endings = ['.h', '.c']):
+def prepare_moss(submission_folder, sub_folder_name = 'src',
+         endings = ['.h', '.c'], keep_structure = False, folder_ending = ' for Moss'):
 
     current_directory = os.getcwd()
     
-    moss_file_dest = submission_folder + ' - for Moss'
+    moss_file_dest = submission_folder + folder_ending
+    
+        
     try:
         os.mkdir(moss_file_dest)
     except:
@@ -363,17 +415,46 @@ def prepare_moss(submission_folder, sub_folder_name = 'src', endings = ['.h', '.
         except:
             shutil.rmtree(moss_dest)
             os.mkdir(moss_dest)
-            
-        src_path = os.path.join(student_path, sub_folder_name);
         
+        if len(sub_folder_name):
+            src_path = os.path.join(student_path, sub_folder_name);
+        else:
+            src_path = student_path
+            
         try:
             os.mkdir(moss_dest)
         except:
             shutil.rmtree(moss_dest)
             os.mkdir(moss_dest)
         
-        move_all_TO(src_path, moss_dest, endings)
-            
+        if not keep_structure:
+            copy_all_TO(src_path, moss_dest, endings)
+        else:
+            copy_all(src_path, moss_dest, endings)
         
         
+        
+def add_missing(submission_folder, path_needed, sub_folder_name = 'src'):
+
+    current_directory = os.getcwd()
+
+    print(path_needed)
+
+    os.chdir(current_directory)
+    submission_directory = os.path.join(current_directory, submission_folder)
+    os.chdir(submission_directory)
+    
+    print(submission_directory)
+    
+    students_submissions = os.listdir()
+    
+    for student in students_submissions:
+        
+        student_path = os.path.join(submission_directory, student)
+        
+        
+        
+        destination = os.path.join(student_path, sub_folder_name)
+        move_all(student_path, os.path.join(student_path, destination))
+        copy_all(path_needed, os.path.join(student_path, destination))
         

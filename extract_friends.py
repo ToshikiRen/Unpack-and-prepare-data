@@ -1,5 +1,5 @@
 from openpyxl import load_workbook
-from utils import return_class_data, return_name_percent, return_data, prepare_moss
+from utils import return_class_data, return_name_percent, return_data, prepare_moss, add_missing
 from utils import above_threshold, rename_all,unzip_files, get_students, remove_all_but_arhives
 import os
 import sys
@@ -28,6 +28,8 @@ import sys
 
 
 argvs = sys.argv
+
+run_folder = os.getcwd()
 
 if argvs[1] == '0':
     source_folder = argvs[2]
@@ -62,6 +64,19 @@ if argvs[1] == '5':
     submission_folder = argvs[2]
     sub_folder_name = argvs[3]
     prepare_moss(submission_folder, sub_folder_name)
+
+if argvs[1] == '6':
+    submission_folder = argvs[2]
+    prepare_moss(submission_folder, '', ['.c'], False, ' - for grading')
+   
+    path_to_data = os.path.join(run_folder, 'data')
+   
+    os.chdir(run_folder)
+    add_missing(submission_folder + ' - for grading', path_to_data)
+    
+    os.chdir(run_folder)
+    prepare_moss(submission_folder, '', ['.c'], False, ' - for Moss')
+    
 # Set the grade collum
 # gradeCol = 11
 # Make all naughty ones red in the .xlsx

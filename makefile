@@ -7,7 +7,6 @@ unzip_files:
 	python extract_friends.py 2 submissions
 
 get_students: 
-	make remove_not_archive &&\
 	make rename_submissions &&\
 	make unzip_files &&\
 	python extract_friends.py 0 submissions 312AB students.txt
@@ -21,3 +20,13 @@ remove_not_archive:
 prepare_all:
 	make get_students &&\
 	python extract_friends.py 5 312AB src
+	
+	
+prepare_for_grading:
+	make get_students &&\
+	python extract_friends.py 6 312AB 
+	
+prepare_for_grading_all:
+	make rename_submissions &&\
+	make unzip_files &&\
+	python extract_friends.py 6 submissions 
