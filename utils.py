@@ -71,14 +71,33 @@ def return_data(active_sheet, desired_collums, substringData = 'C:/Users/leona/O
     
     firstCol = active_sheet[desired_collums[0]]
     data = [ [] for j in range(len(firstCol)) if firstCol[j].value != None ]
+    
     for col in desired_collums:
     
         for row in range(0,len(active_sheet[col])):
             cell = active_sheet[col][row].value
-            if cell != None:
-                data[row].append(remove_substr(cell, substringData))
-
+            try:
+                if cell != None:
+                    data[row].append(remove_substr(cell, substringData))
+            except:
+                pass
     return data
+
+#Retuns only the ones form the provided file
+def return_my_sudents(students_grades, student_list, output_file):
+    
+    file = open(student_list, mode="r", encoding="utf-8")
+    our_students = [student.replace('\n', "") for student in file]
+    
+    file_output = open(output_file,  mode = 'w', encoding = "utf-8")
+    
+    for student in students_grades:
+    
+        if student[0] in our_students:
+            file_output.write(student[0] + ' - ' + str(student[1]) + '\n');
+    
+    
+
 
 # Returns the data from the moss sheet wraped in a class
 def return_class_data(active_sheet, desired_collums, substringData = 'C:/Users/leona/OneDrive/Desktop/Moss/'):

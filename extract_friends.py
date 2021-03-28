@@ -1,6 +1,6 @@
 from openpyxl import load_workbook
 from utils import return_class_data, return_name_percent, return_data, prepare_moss, add_missing
-from utils import above_threshold, rename_all,unzip_files, get_students, remove_all_but_arhives
+from utils import above_threshold, rename_all,unzip_files, get_students, remove_all_but_arhives, return_my_sudents
 import os
 import sys
 
@@ -76,7 +76,12 @@ if argvs[1] == '6':
     
     os.chdir(run_folder)
     prepare_moss(submission_folder, '', ['.c'], False, ' - for Moss')
-    
+
+if argvs[1] == '7':
+    sheet = load_workbook(filename = argvs[2])
+    sheet = sheet.active
+    data = return_data(sheet, ['A', 'B'], '')
+    return_my_sudents(data, argvs[3], argvs[4])
 # Set the grade collum
 # gradeCol = 11
 # Make all naughty ones red in the .xlsx

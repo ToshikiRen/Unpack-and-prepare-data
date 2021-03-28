@@ -30,3 +30,6 @@ prepare_for_grading_all:
 	make rename_submissions &&\
 	make unzip_files &&\
 	python extract_friends.py 6 submissions 
+	
+get_grades:
+	python extract_friends.py 7 $(xlsx).xlsx students.txt $(output).txt
