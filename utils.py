@@ -5,6 +5,7 @@ from openpyxl.styles import PatternFill
 from datetime import datetime
 import patoolib
 import shutil
+import codecs
 
 # sheet_names = ["321AA", "322AA", "323AA", "324AA", "Restantieri (AA)", "321AB",
 #                "322AB", "323AB", "324AB", "321AC", "322AC", "323AC", "324AC"]
@@ -471,9 +472,30 @@ def add_missing(submission_folder, path_needed, sub_folder_name = 'src'):
         
         student_path = os.path.join(submission_directory, student)
         
-        
-        
         destination = os.path.join(student_path, sub_folder_name)
         move_all(student_path, os.path.join(student_path, destination))
         copy_all(path_needed, os.path.join(student_path, destination))
         
+
+def check_homework(submission_directory, sandbox, output_file = 'students_grades.txt', to_remove = 'src'):
+
+    root = os.getcwd()
+    output = codecs.open(output_file, 'w', "utf-8")
+    os.chdir(submission_directory)
+    src = os.getcwd()
+    dest = os.path.join(root, sandbox)
+    to_remove = os.path.join(dest, to_remove)
+
+    students = os.listdir()
+    for student in students:
+        os.chdir(src)
+        student_src = os.path.join(src, student)
+        os.system('rm -rf ' + to_remove)
+        copy_all(student_src, dest)
+
+        os.chdir(dest)
+        result = os.system('make test')
+
+        if result == 0:
+            output.write(student + '\n')
+            

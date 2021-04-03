@@ -33,3 +33,7 @@ prepare_for_grading_all:
 	
 get_grades:
 	python extract_friends.py 7 $(xlsx).xlsx students.txt $(output).txt
+
+grade_our:
+	python extract_friends.py 8 $(submissions) $(sandbox) $(output).txt
+	
