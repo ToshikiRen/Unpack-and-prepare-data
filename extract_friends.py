@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from utils import return_class_data, return_name_percent, return_data, prepare_moss, add_missing
 from utils import above_threshold, rename_all,unzip_files, get_students, remove_all_but_arhives, return_my_sudents
-from utils import check_homework
+from utils import check_homework, remove_files
 import os
 import sys
 
@@ -89,6 +89,18 @@ if argvs[1] == '8':
     sandbox = argvs[3]
     output_file = argvs[4]
     check_homework(submission_folder, sandbox, output_file)
+
+if argvs[1] == '9':
+    source_folder = argvs[2]
+    student_list = argvs[3]
+    get_students(source_folder, student_list, 'left_to_grade', False)
+
+
+
+
+if argvs[1] == '1000':
+    remove_files()
+
 # Set the grade collum
 # gradeCol = 11
 # Make all naughty ones red in the .xlsx

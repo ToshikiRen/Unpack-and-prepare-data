@@ -36,4 +36,9 @@ get_grades:
 
 grade_our:
 	python extract_friends.py 8 $(submissions) $(sandbox) $(output).txt
-	
+
+to_grade:
+	python extract_friends.py 9 $(submissions) $(list).txt
+
+clean:
+	python extract_friends.py 1000 

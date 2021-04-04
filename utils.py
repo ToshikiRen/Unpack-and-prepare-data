@@ -253,11 +253,8 @@ def unzip_files(folder, subFolderName = "src"):
     os.chdir(initialFolder)
    
 # Place all students form student_list in the destination_folder
-def get_students(source_folder, student_list, destination_folder):
+def get_students(source_folder, student_list, destination_folder, in_file = True):
 
-    
-    
-    
     current_directory = os.getcwd()
     
     file = open(student_list, mode="r", encoding="utf-8")
@@ -281,7 +278,7 @@ def get_students(source_folder, student_list, destination_folder):
     # Loop through the submissions
     for student in students_submissions:
         
-        if student in our_students:
+        if student in our_students and in_file:
             
             source_path_student = os.path.join(source_path, student)
             destination_path_student = os.path.join(destination_path, student)
@@ -292,7 +289,17 @@ def get_students(source_folder, student_list, destination_folder):
                 os.mkdir(destination_path_student)
                 
             copy_all(source_path_student, destination_path_student)
-
+        elif student not in our_students and not in_file:
+            
+            source_path_student = os.path.join(source_path, student)
+            destination_path_student = os.path.join(destination_path, student)
+            try:
+                os.mkdir(destination_path_student)
+            except:
+                shutil.rmtree(destination_path_student)
+                os.mkdir(destination_path_student)
+                
+            copy_all(source_path_student, destination_path_student)
 
 # Check if a file has one of the given extensions
 def file_ending_in(file, endings):
@@ -498,4 +505,29 @@ def check_homework(submission_directory, sandbox, output_file = 'students_grades
 
         if result == 0:
             output.write(student + '\n')
-            
+
+def remove_files():
+    
+    list_rem = ['312AB', '312AB-for-grading', '312AB-for-Moss',
+        'left_to_grade', 'submissions', 'data', 'naughtyOnes']
+    
+    root = os.getcwd()
+    for file in list_rem:
+        try:
+            shutil.rmtree(os.path.join(root, file))
+        except:
+            print('File or Folder not found!')
+    
+    remake = ['submissions', 'data']
+
+    for file in remake:
+        try:
+            os.mkdir(file)
+        except:
+            pass
+	
+	
+	
+	
+	
+	
