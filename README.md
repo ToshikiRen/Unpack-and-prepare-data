@@ -12,7 +12,7 @@ A simple yet efficient script for dealing with data coming from moodle.
   <li>removing all files except archives</li>
   <li>adding base files from another folder</li>
   <li>select students and move them in another folder</li>
-  <li>run unit tests using the make test command - the unit testing has to have a make test rule that runs the entire code<li>
+  <li>run unit tests using the make test command - the unit testing has to have a make test rule that runs the entire code</li>
 </ul>
 
 <p>Make rules:</p>
