@@ -6,7 +6,9 @@ from datetime import datetime
 import patoolib
 import shutil
 import codecs
-
+import mosspy
+import time
+import subprocess
 # sheet_names = ["321AA", "322AA", "323AA", "324AA", "Restantieri (AA)", "321AB",
 #                "322AB", "323AB", "324AB", "321AC", "322AC", "323AC", "324AC"]
 sheet_names = ["312AB"]
@@ -484,7 +486,8 @@ def add_missing(submission_folder, path_needed, sub_folder_name = 'src'):
         copy_all(path_needed, os.path.join(student_path, destination))
         
 
-def check_homework(submission_directory, sandbox, output_file = 'students_grades.txt', to_remove = 'src'):
+def check_homework(submission_directory, sandbox, command = 'make test',
+        output_file = 'students_grades.txt', to_remove = 'src'):
 
     root = os.getcwd()
     output = codecs.open(output_file, 'w', "utf-8")
@@ -492,24 +495,40 @@ def check_homework(submission_directory, sandbox, output_file = 'students_grades
     src = os.getcwd()
     dest = os.path.join(root, sandbox)
     to_remove = os.path.join(dest, to_remove)
-
+    
+    # Get students submission list
     students = os.listdir()
     for student in students:
+        
         os.chdir(src)
         student_src = os.path.join(src, student)
+        # Delete the last student src
         os.system('rm -rf ' + to_remove)
+        # Copy current student src
         copy_all(student_src, dest)
 
         os.chdir(dest)
-        result = os.system('make test')
-
-        if result == 0:
-            output.write(student + '\n')
-
-def remove_files():
+        
+        result = os.system(command)
+        if result == 0: 
+            output.write(student + '\n')      
+        #try:
+        #    result = subprocess.run(command, timeout = 60)
+        #    if result.returncode == 0: 
+        #        output.write(student + '\n')
+        #except:
+        #    pass
+        #try:
+        #    os.system('make clean')
+        #except:
+        #    pass
+        
+        
+        
+def remove_files(list_rem = ['312AB', '312AB-for-grading', '312AB-for-Moss',
+        'left_to_grade', 'submissions', 'data', 'naughtyOnes'], remake = ['submissions', 'data']):
     
-    list_rem = ['312AB', '312AB-for-grading', '312AB-for-Moss',
-        'left_to_grade', 'submissions', 'data', 'naughtyOnes']
+    
     
     root = os.getcwd()
     for file in list_rem:
@@ -518,7 +537,7 @@ def remove_files():
         except:
             print('File or Folder not found!')
     
-    remake = ['submissions', 'data']
+    
 
     for file in remake:
         try:
@@ -528,6 +547,39 @@ def remove_files():
 	
 	
 	
-	
-	
-	
+def send_moss_dir_mode(submission, basefile, language):
+
+    userid = 78325144
+    
+    root = os.getcwd()
+
+    moss = mosspy.Moss(userid, language)
+    moss.setDirectoryMode(True)
+    
+    os.chdir(basefile)
+    for base in os.listdir():
+        path = os.path.join(os.getcwd(), base)
+        if os.path.isfile(base):
+            moss.addBaseFile(path)
+
+    os.chdir(root)
+    os.chdir(submission)
+
+    submissions = os.getcwd()
+    students = os.listdir()
+
+    for student in students:
+    
+        student_submission = os.path.join(submissions, student)
+        os.chdir(student_submission)
+        for s_file in os.listdir():
+            if os.path.isfile(s_file):
+                student_file = os.path.join(student_submission, s_file)    
+                moss.addFile(student_file)
+        
+        os.chdir(submissions)
+   
+   
+    url = moss.send()
+    print()
+    moss.saveWebPage(url, "report.html")
