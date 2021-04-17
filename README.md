@@ -24,6 +24,6 @@ A simple yet efficient script for dealing with data coming from moodle.
   <li>remove_not_archive: - removes all the files from the submissions folder subfolders that are not a valid archive <\li>
   <li>prepare_all: - runs the get_students make rule and then selects only the files that have a .c extension (this can be changed, just change or add the parameter endings to the prepare_moss routine), the files are stored in the folder 312AB - for Moss (this can also be changed via the makefile, in order to change the - for Moss ending you'll have to add the parameter folder_ending to the prepare_moss routine)</li>
   <li>prepare_for_grading: - runs the get_students make rule and then creates 2 additional folders, the first one it's identical with the one mentioned above, the other one selects all the files ending in .c and adds the files from the data folder to every submission </li>
-  <li>prepare_for_grading_all: - selects all the students from the submission folder, <b>NOT<\b> just the ones from the students.txt file, and runs the above mentioned command (prepare_for_grading) on all of them </li>
+  <li>prepare_for_grading_all: - selects all the students from the submission folder, <b>NOT</b> just the ones from the students.txt file, and runs the above mentioned command (prepare_for_grading) on all of them </li>
   <li>clean: - removes the folders created by the script </li>
  </ol>
