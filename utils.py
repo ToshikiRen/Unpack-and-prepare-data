@@ -490,7 +490,8 @@ def check_homework(submission_directory, sandbox, command = 'make test',
         output_file = 'students_grades.txt', to_remove = 'src'):
 
     root = os.getcwd()
-    output = codecs.open(output_file, 'w', "utf-8")
+    output = codecs.open(output_file, 'a', "utf-8")
+    output.close();
     os.chdir(submission_directory)
     src = os.getcwd()
     dest = os.path.join(root, sandbox)
@@ -499,7 +500,8 @@ def check_homework(submission_directory, sandbox, command = 'make test',
     # Get students submission list
     students = os.listdir()
     for student in students:
-        
+        os.chdir(root)
+        output = codecs.open(output_file, 'a', "utf-8")
         os.chdir(src)
         student_src = os.path.join(src, student)
         # Delete the last student src
@@ -509,20 +511,18 @@ def check_homework(submission_directory, sandbox, command = 'make test',
 
         os.chdir(dest)
         
-        result = os.system(command)
-        if result == 0: 
-            output.write(student + '\n')      
-        #try:
-        #    result = subprocess.run(command, timeout = 60)
-        #    if result.returncode == 0: 
-        #        output.write(student + '\n')
-        #except:
-        #    pass
-        #try:
-        #    os.system('make clean')
-        #except:
-        #    pass
+        #result = os.system(command)
+        #if result == 0: 
+        #    output.write(student + '\n')        
         
+        try:
+            result = subprocess.run(command, timeout = 60)
+            if result.returncode == 0: 
+                output.write(student + '\n')
+        except:
+            pass
+       
+        output.close()
         
         
 def remove_files(list_rem = ['312AB', '312AB-for-grading', '312AB-for-Moss',

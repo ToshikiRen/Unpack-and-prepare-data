@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from utils import return_class_data, return_name_percent, return_data, prepare_moss, add_missing
 from utils import above_threshold, rename_all,unzip_files, get_students, remove_all_but_arhives, return_my_sudents
-from utils import check_homework, remove_files
+from utils import check_homework, remove_files, send_moss_dir_mode
 import os
 import sys
 
@@ -88,7 +88,8 @@ if argvs[1] == '8':
     submission_folder = argvs[2]
     sandbox = argvs[3]
     output_file = argvs[4]
-    check_homework(submission_folder, sandbox, output_file)
+    command = 'make ' + argvs[5]
+    check_homework(submission_folder, sandbox, command, output_file)
 
 if argvs[1] == '9':
     source_folder = argvs[2]
@@ -96,6 +97,11 @@ if argvs[1] == '9':
     get_students(source_folder, student_list, 'left_to_grade', False)
 
 
+if argvs[1] == '10':
+    submission_folder = argvs[2]
+    basefile = argvs[3]
+    language = 'c'
+    send_moss_dir_mode(submission_folder, basefile, language)
 
 
 if argvs[1] == '1000':

@@ -35,7 +35,7 @@ get_grades:
 	python extract_friends.py 7 $(xlsx).xlsx students.txt $(output).txt
 
 grade_our:
-	python extract_friends.py 8 $(submissions) $(sandbox) $(output).txt
+	python extract_friends.py 8 $(submissions) $(sandbox) $(output).txt $(command)
 
 to_grade:
 	python extract_friends.py 9 $(submissions) $(list).txt
